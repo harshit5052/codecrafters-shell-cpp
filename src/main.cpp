@@ -1,4 +1,6 @@
 #include<bits/stdc++.h>
+#include <unistd.h>    // For fork() and execv()
+#include <sys/wait.h>
 using namespace std;
 namespace fs = std::filesystem;
 
@@ -7,6 +9,20 @@ namespace fs = std::filesystem;
 #else
     const char PATH_DELIMITER = ':';
 #endif
+
+// Helper function to check if a file has executable permissions
+bool isExecutable(const fs::path& filePath) {
+    try {
+        auto perms = fs::status(filePath).permissions();
+        
+        // Check if owner, group, or others have execute bit enabled
+        return (perms & (fs::perms::owner_exec | 
+                         fs::perms::group_exec | 
+                         fs::perms::others_exec)) != fs::perms::none;
+    } catch (const fs::filesystem_error&) {
+        return false; // Fail gracefully if permissions can't be read
+    }
+}
 
 bool findExecute(string cmnd, vector<string> &args, bool istypecmnd){
         const char* pathEnv = std::getenv("PATH");
@@ -83,20 +99,6 @@ bool findExecute(string cmnd, vector<string> &args, bool istypecmnd){
           }
         }
         return executablefileavailable;
-}
-
-// Helper function to check if a file has executable permissions
-bool isExecutable(const fs::path& filePath) {
-    try {
-        auto perms = fs::status(filePath).permissions();
-        
-        // Check if owner, group, or others have execute bit enabled
-        return (perms & (fs::perms::owner_exec | 
-                         fs::perms::group_exec | 
-                         fs::perms::others_exec)) != fs::perms::none;
-    } catch (const fs::filesystem_error&) {
-        return false; // Fail gracefully if permissions can't be read
-    }
 }
 
 int main() {
