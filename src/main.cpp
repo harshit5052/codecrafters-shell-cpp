@@ -61,6 +61,7 @@ int main() {
                         if(executable){
                            executablefileavailable=true;
                            path=entry.path();
+                           cout<<path<<endl;
                         }
                     }
                     break;
