@@ -114,7 +114,8 @@ int main() {
     if(cmnd=="echo" || cmnd=="type" || cmnd=="exit"){
         cout<<cmnd<<" is a shell builtin"<<endl;
     }else{
-        findExecute(cmnd,{},true);
+        vector<string> v;
+        findExecute(cmnd,v,true);
     }
   }else{
 
