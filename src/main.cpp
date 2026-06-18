@@ -6,6 +6,7 @@ int main() {
   cout << "$ ";
   string s;
   cin>>s;
+  if(s=="exit")break;
   cout<<s<<": command not found"<<endl;
   }
 }
