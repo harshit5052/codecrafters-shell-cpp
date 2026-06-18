@@ -43,7 +43,7 @@ int main() {
         string path;
         while (std::getline(ss, singlePath, PATH_DELIMITER)) {
             if (singlePath.empty()) continue;
-
+            cout<<singlePath<<endl;
             fs::path dirPath(singlePath);
 
             // 3. Skip if the path is invalid or is not a directory
