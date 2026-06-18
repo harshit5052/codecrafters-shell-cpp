@@ -40,10 +40,10 @@ int main() {
         std::stringstream ss(pathStr);
         std::string singlePath;
         bool executablefileavailable=false;
+        bool exit=false;
         string path;
         while (std::getline(ss, singlePath, PATH_DELIMITER)) {
             if (singlePath.empty()) continue;
-            cout<<singlePath<<endl;
             fs::path dirPath(singlePath);
 
             // 3. Skip if the path is invalid or is not a directory
@@ -61,15 +61,16 @@ int main() {
                         if(executable){
                            executablefileavailable=true;
                            path=entry.path();
-                           cout<<path<<endl;
                         }
                     }
+                    exit=true;
                     break;
                   }
                 }
             } catch (const fs::filesystem_error& e) {
                 std::cerr << "  Error reading directory: " << e.what() << "\n";
             }
+            if(exit)break;
         }
         if(executablefileavailable){
           cout<<cmnd<<" is "<<path<<endl;
