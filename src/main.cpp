@@ -7,8 +7,15 @@ int main() {
   string s;
   getline(cin, s);
   if(s=="exit")break;
-  if(s.length()>=5 && s.substr(0,5)=="echo "){
+  else if(s.substr(0,5)=="echo "){
     cout<<s.substr(5)<<endl;
+  }else if(s.substr(0,5)=="type "){
+    string cmnd=s.substr(5);
+    if(cmnd=="echo" || cmnd=="type" || cmnd=="exit"){
+        cout<<cmnd<<" is a shell builtin"<<endl;
+    }else{
+        cout<<cmnd<<": not found"<<endl;
+    }
   }else{
     cout<<s<<": command not found"<<endl;
   }
