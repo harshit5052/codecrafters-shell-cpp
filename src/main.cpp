@@ -60,10 +60,10 @@ int main() {
 
                         if(executable){
                            executablefileavailable=true;
+                           exit=true;
                            path=entry.path();
                         }
                     }
-                    exit=true;
                     break;
                   }
                 }
