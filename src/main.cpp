@@ -56,8 +56,8 @@ bool findExecute(string cmnd, vector<string> &args, bool istypecmnd){
                               // c_args.push_back(const_cast<char*>(cmnd)); // The first arg is conventionally the command itself
 
                               for (const auto& arg : args) {
-                                  cout<<arg<<" ";
-                                  cout<<endl;
+                                  // cout<<arg<<" ";
+                                  // cout<<endl;
                                   c_args.push_back(const_cast<char*>(arg.c_str()));
                               }
                               c_args.push_back(nullptr); // Array must be null-terminated
@@ -66,7 +66,7 @@ bool findExecute(string cmnd, vector<string> &args, bool istypecmnd){
                             
                               if (pid == 0) {
                                   // Child process: Execute the command
-                                  if (execv(path.c_str(), c_args.data()) == -1) {
+                                  if (execv(entry.path().c_str(), c_args.data()) == -1) {
                                       perror("Execution failed");
                                       std::exit(EXIT_FAILURE); 
                                   }
@@ -126,8 +126,8 @@ int main() {
     vector<string> words;
     // Extract words using the >> operator, which naturally splits at spaces
     while (ss >> word) {
-        cout<<word<<" ";
-        cout<<endl;
+        // cout<<word<<" ";
+        // cout<<endl;
         words.push_back(word);
     }
     bool foundexecutable=findExecute(words[0],words,false);
