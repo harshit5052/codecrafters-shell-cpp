@@ -114,7 +114,7 @@ int main() {
         fs::current_path(s.substr(4));
     } 
     catch (const fs::filesystem_error& e) {
-        cout<<"cd: "<<path<<": No such file or directory"<<endl;
+        cout<<"cd: "<<s.substr(4)<<": No such file or directory"<<endl;
     }
   }else if(s.substr(0,5)=="echo "){
     cout<<s.substr(5)<<endl;
