@@ -109,11 +109,18 @@ int main() {
   if(s=="exit")break;
   else if(s=="pwd"){
     cout<<fs::current_path().string()<<endl;
+  }else if(s.substr(0,4)=="pwd "){
+    try {
+        fs::current_path(s.substr(4));
+    } 
+    catch (const fs::filesystem_error& e) {
+        cout<<"cd: "<<path<<": No such file or directory"<<endl;
+    }
   }else if(s.substr(0,5)=="echo "){
     cout<<s.substr(5)<<endl;
   }else if(s.substr(0,5)=="type "){
     string cmnd=s.substr(5);
-    if(cmnd=="echo" || cmnd=="type" || cmnd=="exit" || cmnd=="pwd"){
+    if(cmnd=="echo" || cmnd=="type" || cmnd=="exit" || cmnd=="pwd" || cmnd=="cd"){
         cout<<cmnd<<" is a shell builtin"<<endl;
     }else{
         vector<string> v;
