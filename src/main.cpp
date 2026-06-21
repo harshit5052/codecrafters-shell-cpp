@@ -114,7 +114,7 @@ int main() {
     cout<<s.substr(5)<<endl;
   }else if(s.substr(0,5)=="type "){
     string cmnd=s.substr(5);
-    if(cmnd=="echo" || cmnd=="type" || cmnd=="exit"){
+    if(cmnd=="echo" || cmnd=="type" || cmnd=="exit" || cmnd=="pwd"){
         cout<<cmnd<<" is a shell builtin"<<endl;
     }else{
         vector<string> v;
