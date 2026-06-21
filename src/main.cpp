@@ -108,9 +108,8 @@ int main() {
   getline(cin, s);
   if(s=="exit")break;
   else if(s=="pwd"){
-    cout<<fs::current_path()<<endl;
-  }
-  else if(s.substr(0,5)=="echo "){
+    cout<<fs::current_path().string()<<endl;
+  }else if(s.substr(0,5)=="echo "){
     cout<<s.substr(5)<<endl;
   }else if(s.substr(0,5)=="type "){
     string cmnd=s.substr(5);
