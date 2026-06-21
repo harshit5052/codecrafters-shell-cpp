@@ -109,12 +109,12 @@ int main() {
   if(s=="exit")break;
   else if(s=="pwd"){
     cout<<fs::current_path().string()<<endl;
-  }else if(s.substr(0,4)=="pwd "){
+  }else if(s.substr(0,3)=="cd "){
     try {
-        fs::current_path(s.substr(4));
+        fs::current_path(s.substr(3));
     } 
     catch (const fs::filesystem_error& e) {
-        cout<<"cd: "<<s.substr(4)<<": No such file or directory"<<endl;
+        cout<<"cd: "<<s.substr(3)<<": No such file or directory"<<endl;
     }
   }else if(s.substr(0,5)=="echo "){
     cout<<s.substr(5)<<endl;
