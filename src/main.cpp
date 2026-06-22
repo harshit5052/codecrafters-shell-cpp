@@ -111,7 +111,13 @@ int main() {
     cout<<fs::current_path().string()<<endl;
   }else if(s.substr(0,3)=="cd "){
     try {
-        fs::current_path(s.substr(3));
+        if(s.substr(3)=="~"){
+          const char* pathEnv = getenv("HOME");
+          string pathStr(pathEnv);
+          fs::current_path(pathStr);
+        }else{
+          fs::current_path(s.substr(3));
+        }
     } 
     catch (const fs::filesystem_error& e) {
         cout<<"cd: "<<s.substr(3)<<": No such file or directory"<<endl;
