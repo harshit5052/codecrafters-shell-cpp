@@ -138,7 +138,7 @@ bool findExecute(string cmnd, vector<string> &args, bool istypecmnd){
                               // c_args.push_back(const_cast<char*>(cmnd)); // The first arg is conventionally the command itself
 
                               for (const auto& arg : args) {
-                                  c_args.push_back(const_cast<char*>(parseString(arg).c_str()));
+                                  c_args.push_back(const_cast<char*>(arg.c_str()));
                               }
                               c_args.push_back(nullptr); // Array must be null-terminated
                             
