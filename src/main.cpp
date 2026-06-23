@@ -224,6 +224,9 @@ int main() {
     //     words.push_back(word);
     // }
     // cout<<endl;
+    for(int i=0;i<words.size();i++){
+      cout<<words[i]<<endl;
+    }
     bool foundexecutable=findExecute(words[0],words,false);
     if(!foundexecutable)cout<<s<<": command not found"<<endl;
   }
