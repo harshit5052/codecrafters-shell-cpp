@@ -10,6 +10,42 @@ namespace fs = std::filesystem;
     const char PATH_DELIMITER = ':';
 #endif
 
+string parseString(const string& input) {
+    string result = "";
+    bool inQuotes = false;
+    bool lastWasSpace = false;
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        char ch = input[i];
+
+        if (ch == '\'') {
+            // Toggle the quote state
+            inQuotes = !inQuotes;
+            // Reset space tracking when entering/leaving quotes to handle boundaries
+            lastWasSpace = false; 
+        } 
+        else if (inQuotes) {
+            // Inside quotes: preserve all characters exactly as they are
+            result += ch;
+        } 
+        else {
+            // Outside quotes: handle spaces and standard characters
+            if (ch == ' ') {
+                if (!lastWasSpace) {
+                    result += ' ';
+                    lastWasSpace = true;
+                }
+                // If lastWasSpace is true, consecutive spaces are ignored (collapsed)
+            } else {
+                result += ch;
+                lastWasSpace = false;
+            }
+        }
+    }
+
+    return result;
+}
+
 // Helper function to check if a file has executable permissions
 bool isExecutable(const fs::path& filePath) {
     try {
@@ -116,16 +152,16 @@ int main() {
           string pathStr(pathEnv);
           fs::current_path(pathStr);
         }else{
-          fs::current_path(s.substr(3));
+          fs::current_path(parseString(s.substr(3)));
         }
     } 
     catch (const fs::filesystem_error& e) {
         cout<<"cd: "<<s.substr(3)<<": No such file or directory"<<endl;
     }
   }else if(s.substr(0,5)=="echo "){
-    cout<<s.substr(5)<<endl;
+    cout<<parseString(s.substr(5))<<endl;
   }else if(s.substr(0,5)=="type "){
-    string cmnd=s.substr(5);
+    string cmnd=parseString(s.substr(5));
     if(cmnd=="echo" || cmnd=="type" || cmnd=="exit" || cmnd=="pwd" || cmnd=="cd"){
         cout<<cmnd<<" is a shell builtin"<<endl;
     }else{
@@ -134,7 +170,7 @@ int main() {
     }
   }else{
 
-    stringstream ss(s);
+    stringstream ss(parseString(s));
     string word;
     vector<string> words;
     // Extract words using the >> operator, which naturally splits at spaces
