@@ -10,6 +10,52 @@ namespace fs = std::filesystem;
     const char PATH_DELIMITER = ':';
 #endif
 
+std::vector<std::string> tokenizeString(const std::string& input) {
+    std::vector<std::string> tokens;
+    std::string currentToken = "";
+    bool inQuotes = false;
+    bool hasContent = false; // Tracks if the current token has any characters added
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        char ch = input[i];
+
+        if (ch == '\'') {
+            // Toggle quote state
+            inQuotes = !inQuotes;
+            // Mark that this token is active (handles cases like empty quotes '' or "" 
+            // where you might want to preserve an empty argument)
+            hasContent = true; 
+        } 
+        else if (inQuotes) {
+            // Inside quotes: keep all spaces and characters
+            currentToken += ch;
+            hasContent = true;
+        } 
+        else {
+            // Outside quotes
+            if (ch == ' ') {
+                // If we hit a space and the current token has content, push it
+                if (hasContent) {
+                    tokens.push_back(currentToken);
+                    currentToken = "";
+                    hasContent = false;
+                }
+                // Multiple consecutive spaces outside quotes are naturally ignored
+            } else {
+                currentToken += ch;
+                hasContent = true;
+            }
+        }
+    }
+
+    // Push the very last token if the string didn't end with a space
+    if (hasContent) {
+        tokens.push_back(currentToken);
+    }
+
+    return tokens;
+}
+
 string parseString(const string& input) {
     string result = "";
     bool inQuotes = false;
@@ -169,15 +215,15 @@ int main() {
         findExecute(cmnd,v,true);
     }
   }else{
-    stringstream ss(s);
-    string word;
-    vector<string> words;
+    // stringstream ss(s);
+    // string word;
+    vector<string> words=tokenizeString(s);
     // Extract words using the >> operator, which naturally splits at spaces
-    while (ss >> word) {
-        cout<<word<<" ";
-        words.push_back(word);
-    }
-    cout<<endl;
+    // while (ss >> word) {
+    //     cout<<word<<" ";
+    //     words.push_back(word);
+    // }
+    // cout<<endl;
     bool foundexecutable=findExecute(words[0],words,false);
     if(!foundexecutable)cout<<s<<": command not found"<<endl;
   }
