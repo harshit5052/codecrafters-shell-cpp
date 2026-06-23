@@ -169,7 +169,7 @@ int main() {
         findExecute(cmnd,v,true);
     }
   }else{
-
+    cout<<parseString(s)<<endl;
     stringstream ss(parseString(s));
     string word;
     vector<string> words;
