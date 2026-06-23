@@ -92,7 +92,7 @@ bool findExecute(string cmnd, vector<string> &args, bool istypecmnd){
                               // c_args.push_back(const_cast<char*>(cmnd)); // The first arg is conventionally the command itself
 
                               for (const auto& arg : args) {
-                                  c_args.push_back(const_cast<char*>(arg.c_str()));
+                                  c_args.push_back(const_cast<char*>(parseString(arg.c_str())));
                               }
                               c_args.push_back(nullptr); // Array must be null-terminated
                             
@@ -169,8 +169,7 @@ int main() {
         findExecute(cmnd,v,true);
     }
   }else{
-    cout<<parseString(s)<<endl;
-    stringstream ss(parseString(s));
+    stringstream ss(s);
     string word;
     vector<string> words;
     // Extract words using the >> operator, which naturally splits at spaces
