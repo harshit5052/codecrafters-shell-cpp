@@ -174,8 +174,10 @@ int main() {
     vector<string> words;
     // Extract words using the >> operator, which naturally splits at spaces
     while (ss >> word) {
+        cout<<word<<" ";
         words.push_back(word);
     }
+    cout<<endl;
     bool foundexecutable=findExecute(words[0],words,false);
     if(!foundexecutable)cout<<s<<": command not found"<<endl;
   }
