@@ -13,42 +13,48 @@ namespace fs = std::filesystem;
 std::vector<std::string> tokenizeString(const std::string& input) {
     std::vector<std::string> tokens;
     std::string currentToken = "";
-    bool inQuotes = false;
-    bool hasContent = false; // Tracks if the current token has any characters added
+    char quoteChar = '\0'; // Keeps track of active quote type: '\0' (none), '\'', or '"'
+    bool hasContent = false;
 
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
 
-        if (ch == '\'') {
-            // Toggle quote state
-            inQuotes = !inQuotes;
-            // Mark that this token is active (handles cases like empty quotes '' or "" 
-            // where you might want to preserve an empty argument)
-            hasContent = true; 
-        } 
-        else if (inQuotes) {
-            // Inside quotes: keep all spaces and characters
-            currentToken += ch;
-            hasContent = true;
+        if (quoteChar != '\0') {
+            // We are INSIDE a quoted string
+            if (ch == quoteChar) {
+                // Closing quote found matching the opening quote
+                quoteChar = '\0';
+                hasContent = true; // Handles empty quotes like "" or '' as valid arguments
+            } else {
+                // Inside quotes: keep everything literal (including opposite quote types)
+                currentToken += ch;
+                hasContent = true;
+            }
         } 
         else {
-            // Outside quotes
-            if (ch == ' ') {
-                // If we hit a space and the current token has content, push it
+            // We are OUTSIDE a quoted string
+            if (ch == '\'' || ch == '"') {
+                // Opening a new quote block
+                quoteChar = ch;
+                hasContent = true;
+            } 
+            else if (ch == ' ') {
+                // Space acts as a delimiter outside quotes
                 if (hasContent) {
                     tokens.push_back(currentToken);
                     currentToken = "";
                     hasContent = false;
                 }
-                // Multiple consecutive spaces outside quotes are naturally ignored
-            } else {
+            } 
+            else {
+                // Regular character outside quotes
                 currentToken += ch;
                 hasContent = true;
             }
         }
     }
 
-    // Push the very last token if the string didn't end with a space
+    // Push trailing token if exists
     if (hasContent) {
         tokens.push_back(currentToken);
     }
@@ -56,33 +62,36 @@ std::vector<std::string> tokenizeString(const std::string& input) {
     return tokens;
 }
 
-string parseString(const string& input) {
-    string result = "";
-    bool inQuotes = false;
+std::string parseString(const std::string& input) {
+    std::string result = "";
+    char quoteChar = '\0'; // Tracks active quote: '\0' (none), '\'', or '"'
     bool lastWasSpace = false;
 
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
 
-        if (ch == '\'') {
-            // Toggle the quote state
-            inQuotes = !inQuotes;
-            // Reset space tracking when entering/leaving quotes to handle boundaries
-            lastWasSpace = false; 
-        } 
-        else if (inQuotes) {
-            // Inside quotes: preserve all characters exactly as they are
-            result += ch;
+        if (quoteChar != '\0') {
+            // INSIDE quotes
+            if (ch == quoteChar) {
+                quoteChar = '\0'; // Close quote block
+                lastWasSpace = false; 
+            } else {
+                result += ch; // Keep literal contents
+            }
         } 
         else {
-            // Outside quotes: handle spaces and standard characters
-            if (ch == ' ') {
+            // OUTSIDE quotes
+            if (ch == '\'' || ch == '"') {
+                quoteChar = ch; // Open quote block
+                lastWasSpace = false;
+            } 
+            else if (ch == ' ') {
                 if (!lastWasSpace) {
                     result += ' ';
                     lastWasSpace = true;
                 }
-                // If lastWasSpace is true, consecutive spaces are ignored (collapsed)
-            } else {
+            } 
+            else {
                 result += ch;
                 lastWasSpace = false;
             }
