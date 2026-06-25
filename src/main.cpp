@@ -20,7 +20,7 @@ std::vector<std::string> tokenizeString(const std::string& input) {
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
         if (quoteChar != '\0') {
-            if(lastWasBackSlash && (ch=='\\' || ch=='"' )){
+            if(lastWasBackSlash && (ch=='\\' || ch=='"' ) && quoteChar=='"'){
                   currentToken += ch;
                   lastWasBackSlash=false;
             }
@@ -31,7 +31,7 @@ std::vector<std::string> tokenizeString(const std::string& input) {
                 hasContent = true; // Handles empty quotes like "" or '' as valid arguments
             } else {
                 // Inside quotes: keep everything literal (including opposite quote types)
-                if(ch=='\\'){
+                if(ch=='\\' && quoteChar=='"'){
                   lastWasBackSlash=true;
                 }else{
                   currentToken += ch;
@@ -90,7 +90,7 @@ std::string parseString(const std::string& input) {
 
         if (quoteChar != '\0') {
             // INSIDE quotes
-            if(lastWasBackSlash && (ch=='\\' || ch=='"' )){
+            if(lastWasBackSlash && (ch=='\\' || ch=='"' ) && quoteChar=='"'){
                   result += ch;
                   lastWasBackSlash=false;
             }
@@ -99,7 +99,7 @@ std::string parseString(const std::string& input) {
                 lastWasSpace = false; 
             } else {
                 
-                if(ch=='\\'){
+                if(ch=='\\' && quoteChar=='"'){
                   lastWasBackSlash=true;
                 }else{
                   result += ch; // Keep literal contents
