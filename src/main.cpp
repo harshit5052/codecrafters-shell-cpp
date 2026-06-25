@@ -18,7 +18,7 @@ std::vector<std::string> tokenizeString(const std::string& input) {
 
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
-
+        bool lastWasBackSlash=false;
         if (quoteChar != '\0') {
             // We are INSIDE a quoted string
             if (ch == quoteChar) {
@@ -33,7 +33,12 @@ std::vector<std::string> tokenizeString(const std::string& input) {
         } 
         else {
             // We are OUTSIDE a quoted string
-            if (ch == '\'' || ch == '"') {
+            if(lastWasBackSlash){
+                currentToken += ch;
+                hasContent = true;
+                lastWasBackSlash=false;
+            }
+            else if (ch == '\'' || ch == '"') {
                 // Opening a new quote block
                 quoteChar = ch;
                 hasContent = true;
@@ -45,6 +50,9 @@ std::vector<std::string> tokenizeString(const std::string& input) {
                     currentToken = "";
                     hasContent = false;
                 }
+            }
+            else if(ch == '\\'){
+               lastWasBackSlash=true;
             } 
             else {
                 // Regular character outside quotes
@@ -66,6 +74,7 @@ std::string parseString(const std::string& input) {
     std::string result = "";
     char quoteChar = '\0'; // Tracks active quote: '\0' (none), '\'', or '"'
     bool lastWasSpace = false;
+    bool lastWasBackSlash = false;
 
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
@@ -81,7 +90,10 @@ std::string parseString(const std::string& input) {
         } 
         else {
             // OUTSIDE quotes
-            if (ch == '\'' || ch == '"') {
+            if(lastWasBackSlash){
+                result += ch;
+                lastWasBackSlash = false;
+            }else if (ch == '\'' || ch == '"') {
                 quoteChar = ch; // Open quote block
                 lastWasSpace = false;
             } 
@@ -90,7 +102,10 @@ std::string parseString(const std::string& input) {
                     result += ' ';
                     lastWasSpace = true;
                 }
-            } 
+            } else if(ch=='\\'){
+                lastWasBackSlash = true;
+                lastWasSpace = false;
+            }
             else {
                 result += ch;
                 lastWasSpace = false;
