@@ -35,7 +35,7 @@ std::vector<std::string> tokenizeString(const std::string& input) {
             // We are OUTSIDE a quoted string
             if(lastWasBackSlash){
                 currentToken += ch;
-                if(ch=='\\')currentToken += ch;
+                // if(ch=='\\')currentToken += ch;
                 hasContent = true;
                 lastWasBackSlash=false;
             }
@@ -93,7 +93,7 @@ std::string parseString(const std::string& input) {
             // OUTSIDE quotes
             if(lastWasBackSlash){
                 result += ch;
-                if(ch=='\\') result+=ch;
+                // if(ch=='\\') result+=ch;
                 lastWasBackSlash = false;
             }else if (ch == '\'' || ch == '"') {
                 quoteChar = ch; // Open quote block
