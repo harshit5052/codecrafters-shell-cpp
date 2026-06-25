@@ -15,10 +15,10 @@ std::vector<std::string> tokenizeString(const std::string& input) {
     std::string currentToken = "";
     char quoteChar = '\0'; // Keeps track of active quote type: '\0' (none), '\'', or '"'
     bool hasContent = false;
+    bool lastWasBackSlash=false;
 
     for (size_t i = 0; i < input.length(); ++i) {
         char ch = input[i];
-        bool lastWasBackSlash=false;
         if (quoteChar != '\0') {
             // We are INSIDE a quoted string
             if (ch == quoteChar) {
